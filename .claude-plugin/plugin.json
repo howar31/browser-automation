@@ -1,0 +1,20 @@
+{
+  "name": "browser-automation",
+  "version": "0.1.0",
+  "description": "Drive a real headless browser (Puppeteer + Playwright) — clicks, screenshots, PDFs, network intercept, CDP debugging, cross-browser E2E",
+  "author": { "name": "howar31", "url": "https://github.com/howar31" },
+  "homepage": "https://github.com/howar31/browser-automation",
+  "repository": "https://github.com/howar31/browser-automation.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "puppeteer",
+    "playwright",
+    "browser-automation",
+    "headless-chrome",
+    "cdp",
+    "e2e-testing",
+    "web-scraping"
+  ]
+}
