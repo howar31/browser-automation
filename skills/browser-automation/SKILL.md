@@ -54,7 +54,7 @@ digraph choose {
 
 ## Runtime — detect, install, run
 
-Assume nothing about whether the engines are present. **Detect first, install only if missing, then run correctly** for how they were installed.
+Assume nothing about whether the engines are present. **Detect first; if neither engine is installed, prompt the user before installing; then run correctly** for how they were installed.
 
 ### 1. Detect
 
@@ -63,6 +63,8 @@ node --version                                                   # need an activ
 npm ls puppeteer playwright 2>/dev/null                          # local to a project?
 npm ls -g --depth=0 2>/dev/null | grep -E 'puppeteer|playwright' # installed globally?
 ```
+
+**If detection finds neither Puppeteer nor Playwright, do not silently install them** — the engines plus their browser binaries are hundreds of MB. Tell the user nothing is available and ask them to run the install step below, or confirm with them before installing it yourself. If at least one engine is already present, use it and skip install.
 
 ### 2. Install (only if missing)
 

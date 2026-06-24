@@ -4,7 +4,7 @@
 # Symlinks the repo's skill directory into ~/.claude/skills/ so Claude Code
 # picks it up. There is no hook and no settings.json patch — it is a pure skill.
 # Installing the runtime engines (Puppeteer / Playwright) is a separate step the
-# skill itself documents; this installer only checks for Node as an advisory.
+# skill documents; this installer only checks for Node + the engines (advisory).
 #
 # Safe to re-run. Backs up before any destructive action. Verifies after install.
 #
@@ -54,12 +54,32 @@ run() {
   fi
 }
 
-# --- Runtime advisory (non-fatal) ---
+# --- Runtime advisory (non-fatal; never installs anything) ---
 header "Runtime advisory"
+nodever="$(node --version 2>/dev/null || echo '?')"
 if command -v node >/dev/null 2>&1; then
-  ok "node $(node --version 2>/dev/null)"
+  ok "node $nodever"
 else
-  warn "node not found — the skill needs Node + Puppeteer/Playwright at runtime (see SKILL.md)"
+  warn "node not found — install an active LTS Node; the skill needs it at runtime"
+fi
+
+# Check the ACTIVE Node's global modules only. With nvm/fnm, globals are per Node
+# version, so engines installed under another version are invisible here; so are
+# project-local (per-task) installs. The check is tied to $nodever for that reason.
+engines=0
+if command -v npm >/dev/null 2>&1; then
+  groot="$(npm root -g 2>/dev/null)"
+  for eng in puppeteer playwright; do
+    if [ -n "$groot" ] && [ -d "$groot/$eng" ]; then ok "$eng (global, $nodever)"; engines=$((engines + 1)); fi
+  done
+fi
+if [ "$engines" -eq 0 ]; then
+  warn "no puppeteer/playwright in this Node's global ($nodever) — install at least one before using the skill:"
+  note "npm install -g puppeteer playwright           # or -D inside a project"
+  note "npx puppeteer browsers install chrome          # if postinstall skipped the download"
+  note "npx playwright install chromium firefox webkit"
+  note "with nvm/fnm, globals are per Node version — check/install under the version you'll run the skill with"
+  note "(project-local installs are also not visible here — see SKILL.md / README)"
 fi
 
 # --- Phase 1: install skill directory (symlink) ---
