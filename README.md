@@ -56,23 +56,23 @@ Symlinks `skills/browser-automation` into `~/.claude/skills/`, so the skill is i
 
 ### Plugin manager — marketplace (discoverable, auto-updating)
 
-Installs the same skill, namespaced as **`/browser-automation:browser-automation`**. Two registration paths — pick one:
+Installs the same skill, namespaced as **`/browser:browser-automation`**. Two registration paths — pick one:
 
 ```bash
 # Self-hosted marketplace (this repo is its own marketplace)
 claude plugin marketplace add howar31/browser-automation
-claude plugin install browser-automation@browser-automation
+claude plugin install browser@browser-automation
 
 # Or the central marketplace (all of howar31's plugins; register once)
 claude plugin marketplace add howar31/howar31-marketplace
-claude plugin install browser-automation@howar31
+claude plugin install browser@howar31
 ```
 
 ### Which method?
 
 | | setup.sh (symlink) | plugin manager |
 |---|---|---|
-| Slash name | `/browser-automation` (shortest) | `/browser-automation:browser-automation` |
+| Slash name | `/browser-automation` (shortest) | `/browser:browser-automation` |
 | Install / update | clone + re-run `setup.sh` | `claude plugin install` / `update` |
 | Discoverable via marketplace | no | yes |
 
@@ -85,7 +85,7 @@ Either way, skills are picked up dynamically — run `/reload-plugins` in an act
 rm ~/.claude/skills/browser-automation
 
 # Plugin install
-claude plugin uninstall browser-automation@browser-automation   # or @howar31
+claude plugin uninstall browser@browser-automation   # or browser@howar31
 ```
 
 ## License

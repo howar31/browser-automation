@@ -4,7 +4,7 @@
   "metadata": { "description": "Self-hosted single-plugin marketplace for browser-automation" },
   "plugins": [
     {
-      "name": "browser-automation",
+      "name": "browser",
       "source": "./",
       "description": "Drive a real headless browser (Puppeteer + Playwright) — clicks, screenshots, PDFs, network intercept, CDP debugging, cross-browser E2E"
     }

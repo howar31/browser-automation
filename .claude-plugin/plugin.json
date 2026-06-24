@@ -1,5 +1,5 @@
 {
-  "name": "browser-automation",
+  "name": "browser",
   "version": "0.1.0",
   "description": "Drive a real headless browser (Puppeteer + Playwright) — clicks, screenshots, PDFs, network intercept, CDP debugging, cross-browser E2E",
   "author": { "name": "howar31", "url": "https://github.com/howar31" },
