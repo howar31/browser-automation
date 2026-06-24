@@ -38,50 +38,54 @@ The skill documents this and the cross-platform browser cache locations in full.
 
 ## Install
 
-### As a plugin (recommended)
+The skill is **model-invoked** — once installed, Claude triggers it automatically from the `description`; the slash name below only matters when you invoke it by hand. Two ways to install. **Use one, not both** — installing via both exposes the same skill under two names.
 
-Two registration paths install the same plugin — pick one:
-
-**Self-hosted marketplace** (this repo is its own marketplace):
-
-```bash
-claude plugin marketplace add howar31/browser-automation
-claude plugin install browser-automation@browser-automation
-```
-
-**Central marketplace** (all of howar31's plugins; register once, future plugins appear automatically):
-
-```bash
-claude plugin marketplace add howar31/howar31-marketplace
-claude plugin install browser-automation@howar31
-```
-
-### Manual (symlink installer)
-
-If you prefer a plain skill directory over the plugin manager, clone and run the installer:
+### setup.sh — symlink (recommended; shortest slash name)
 
 ```bash
 git clone https://github.com/howar31/browser-automation
 cd browser-automation && ./setup.sh
 ```
 
-`setup.sh` symlinks `skills/browser-automation` into `~/.claude/skills/` (the repo stays the single source of truth). It is idempotent and backs up before any destructive action:
+Symlinks `skills/browser-automation` into `~/.claude/skills/`, so the skill is invoked as **`/browser-automation`** (no namespace prefix) and the repo stays the single source of truth. Idempotent; backs up before any destructive action:
 
 ```bash
 ./setup.sh --dry-run   # preview without applying
 ./setup.sh --force     # replace an existing real directory at the skill path (backed up first)
 ```
 
-Skills are picked up dynamically — run `/reload-plugins` in an active session if `browser-automation` does not appear immediately.
+### Plugin manager — marketplace (discoverable, auto-updating)
+
+Installs the same skill, namespaced as **`/browser-automation:browser-automation`**. Two registration paths — pick one:
+
+```bash
+# Self-hosted marketplace (this repo is its own marketplace)
+claude plugin marketplace add howar31/browser-automation
+claude plugin install browser-automation@browser-automation
+
+# Or the central marketplace (all of howar31's plugins; register once)
+claude plugin marketplace add howar31/howar31-marketplace
+claude plugin install browser-automation@howar31
+```
+
+### Which method?
+
+| | setup.sh (symlink) | plugin manager |
+|---|---|---|
+| Slash name | `/browser-automation` (shortest) | `/browser-automation:browser-automation` |
+| Install / update | clone + re-run `setup.sh` | `claude plugin install` / `update` |
+| Discoverable via marketplace | no | yes |
+
+Either way, skills are picked up dynamically — run `/reload-plugins` in an active session if `browser-automation` does not appear immediately.
 
 ## Uninstall
 
 ```bash
+# setup.sh install (the replaced real dir, if any, is in ~/.claude/skills/.bak/<timestamp>/)
+rm ~/.claude/skills/browser-automation
+
 # Plugin install
 claude plugin uninstall browser-automation@browser-automation   # or @howar31
-
-# Manual install (the replaced real dir, if any, is in ~/.claude/skills/.bak/<timestamp>/)
-rm ~/.claude/skills/browser-automation
 ```
 
 ## License

@@ -6,7 +6,7 @@ Public Claude Code plugin: one model-invoked skill that guides driving a real he
 - `skills/browser-automation/SKILL.md` — the skill, and the deliverable. Reference guide: engine decision tree, detect/install/run, Puppeteer + Playwright patterns, wait strategies, troubleshooting.
 - `.claude-plugin/plugin.json` — plugin manifest.
 - `.claude-plugin/marketplace.json` — self-marketplace (`source: "./"`) so the repo is directly installable.
-- `setup.sh` — manual installer; symlinks the skill into `~/.claude/skills/` (alternative to the plugin manager). Idempotent; `--dry-run` / `--force`.
+- `setup.sh` — symlink installer (recommended path): links the skill into `~/.claude/skills/` for the short `/browser-automation` name, repo stays source of truth. Idempotent; `--dry-run` / `--force`. The plugin manager is the alternative (namespaced `/browser-automation:browser-automation`, discoverable). Use one, not both.
 - `README.md` — human-facing overview + install / uninstall.
 
 ## Conventions
@@ -14,5 +14,5 @@ Public Claude Code plugin: one model-invoked skill that guides driving a real he
 - Skill content stays portable and public: no machine-specific assertions, no personal / locale data in examples.
 - Conventional Commits. MIT licensed.
 
-## Install (local test)
-`./setup.sh` (symlink), or `claude plugin marketplace add howar31/browser-automation && claude plugin install browser-automation@browser-automation`.
+## Install
+Recommended — `./setup.sh` (symlink → `/browser-automation`). Alternative — `claude plugin marketplace add howar31/browser-automation && claude plugin install browser-automation@browser-automation` (→ `/browser-automation:browser-automation`).

@@ -8,7 +8,7 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
 - **Two distribution channels from one repo:**
   - *Standalone plugin* — `.claude-plugin/plugin.json` defines the plugin; `.claude-plugin/marketplace.json` (`source: "./"`) makes the repo its own single-plugin marketplace, directly installable.
   - *Central marketplace* — the sibling `howar31-marketplace` repo lists this repo by `source: { github, repo: howar31/browser-automation }`. Same content, zero duplication.
-- **Two install mechanisms:** the Claude Code plugin manager (`claude plugin …`), or `setup.sh` which symlinks the skill directory into `~/.claude/skills/`.
+- **Two install mechanisms, one source:** `setup.sh` (recommended) symlinks the skill directory into `~/.claude/skills/`, giving the short un-namespaced name `/browser-automation`; the Claude Code plugin manager (`claude plugin …`) installs the same skill namespaced as `/browser-automation:browser-automation`, in exchange for marketplace discoverability and auto-update. Use one, not both (both would expose the skill under two names).
 
 ## Layout
 ```
@@ -39,10 +39,12 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
 
 ## Deploy
 - **Publish:** push to `github.com/howar31/browser-automation` (public). The repo is consumed live by the plugin manager — no build step.
-- **Install (plugin):** `claude plugin marketplace add howar31/browser-automation` then `claude plugin install browser-automation@browser-automation`; or via the central marketplace, `…add howar31/howar31-marketplace` then `install browser-automation@howar31`.
-- **Install (manual):** `./setup.sh` (symlink into `~/.claude/skills/`). Run `/reload-plugins` if the skill does not appear immediately.
+- **Install (recommended, symlink):** `./setup.sh` symlinks the skill into `~/.claude/skills/` → `/browser-automation`. Idempotent; `--dry-run` / `--force`.
+- **Install (plugin):** `claude plugin marketplace add howar31/browser-automation` then `claude plugin install browser-automation@browser-automation`; or via the central marketplace, `…add howar31/howar31-marketplace` then `install browser-automation@howar31`. → `/browser-automation:browser-automation`.
+- Run `/reload-plugins` if the skill does not appear immediately.
 
 ## Key Decisions
 - **Genericized from a private original.** The skill began as a personal copy carrying machine-specific setup notes and locale/project-specific example strings; those were removed so the public version is portable. Reusable knowledge (e.g. nvm's per-Node-version global installs) was kept but reframed as conditional guidance.
 - **Dual-channel, single source.** Shipping `plugin.json` + a self `marketplace.json` in the same repo, and also listing the repo in the central marketplace, lets one source serve both install paths without copying skill content.
 - **No model-invocation gating.** The skill has no side effects, so it is left fully model- and user-invocable.
+- **setup.sh is the recommended install.** It is a single, model-invoked skill, so the plugin namespace (`/browser-automation:browser-automation`) only adds length without benefit; the symlink install keeps the short `/browser-automation` for manual invocation. The plugin path stays available for users who want marketplace discoverability and auto-update.
