@@ -3,7 +3,7 @@
 Public Claude Code plugin: one model-invoked skill that guides driving a real headless browser (Puppeteer + Playwright). Distributed two ways from this single repo — as a standalone plugin (the repo is its own marketplace) and via the central `howar31` marketplace.
 
 ## Layout
-- `skills/browser-automation/SKILL.md` — the skill, and the deliverable. Reference guide: engine decision tree, detect/install/run, Puppeteer + Playwright patterns, wait strategies, troubleshooting.
+- `skills/browser-automation/SKILL.md` — the skill, and the deliverable. Reference guide: engine decision tree, detect/install/run, macOS sandboxed launch, Puppeteer + Playwright patterns, wait strategies, troubleshooting.
 - `.claude-plugin/plugin.json` — plugin manifest.
 - `.claude-plugin/marketplace.json` — self-marketplace (`source: "./"`) so the repo is directly installable.
 - `setup.sh` — symlink installer (recommended path): links the skill into `~/.claude/skills/` for the short `/browser-automation` name, repo stays source of truth. Idempotent; `--dry-run` / `--force`. The plugin manager is the alternative (namespaced `/browser:browser-automation`, discoverable). Use one, not both.

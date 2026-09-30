@@ -18,7 +18,7 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
 │   └── marketplace.json     # self-marketplace: source "./" → repo installable directly
 ├── skills/
 │   └── browser-automation/
-│       └── SKILL.md         # the skill: decision tree, detect/install/run, engine patterns
+│       └── SKILL.md         # the skill: decision tree, detect/install/run, macOS sandboxed launch, engine patterns
 ├── setup.sh                 # idempotent symlink installer (--dry-run / --force)
 ├── README.md                # human-facing overview + install/uninstall
 ├── CLAUDE.md                # repo guide for agents working in this repo
@@ -47,4 +47,5 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
 - **Genericized from a private original.** The skill began as a personal copy carrying machine-specific setup notes and locale/project-specific example strings; those were removed so the public version is portable. Reusable knowledge (e.g. nvm's per-Node-version global installs) was kept but reframed as conditional guidance.
 - **Dual-channel, single source.** Shipping `plugin.json` + a self `marketplace.json` in the same repo, and also listing the repo in the central marketplace, lets one source serve both install paths without copying skill content.
 - **No model-invocation gating.** The skill has no side effects, so it is left fully model- and user-invocable.
+- **macOS sandboxed launch for downloads / File System Access.** On macOS, Chrome touches `~/Desktop`, `~/Documents`, `~/Downloads` and `~/Library` when a page downloads a file or uses the File System Access API, which makes anti-ransomware / protected-folder features of security software alert on the unsigned test browser. SKILL.md ships a `personalFoldersOffLimits(browserPath)` helper that wraps the browser in `/usr/bin/sandbox-exec` with a profile denying the user's personal folders and sets a throwaway `HOME` / `CFFIXED_USER_HOME`; it requires `--no-sandbox` and is a no-op off macOS. Exercised with Puppeteer only; the Playwright equivalent (`executablePath`, `env` in `chromium.launch()`) is documented as not yet run.
 - **setup.sh is the recommended install.** It is a single, model-invoked skill, so the plugin namespace (`/browser:browser-automation`) only adds length without benefit; the symlink install keeps the short `/browser-automation` for manual invocation. The plugin path stays available for users who want marketplace discoverability and auto-update.

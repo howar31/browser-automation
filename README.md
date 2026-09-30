@@ -22,7 +22,7 @@ A single skill, `browser-automation`, covering **two engines** with a decision g
 | Strengths | deepest Chrome DevTools (raw CDP, heap/CPU profiling, `chrome://tracing`) | auto-waiting, locators, isolated contexts, `codegen`, trace viewer, cross-browser |
 | Reach for it when | a quick Chrome script or DevTools-deep debugging | new interactive / E2E / cross-browser work (auto-waiting removes most flake) |
 
-The skill body has copy-ready patterns for interaction, network interception, DOM inspection, screenshots/PDF, device/geolocation emulation, performance profiling, raw CDP, wait strategies, and troubleshooting.
+The skill body has copy-ready patterns for interaction, network interception, DOM inspection, screenshots/PDF, device/geolocation emulation, performance profiling, raw CDP, wait strategies, a sandboxed launch for macOS scripts that download files or use the File System Access API, and troubleshooting.
 
 ## Requirements
 

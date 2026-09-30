@@ -130,6 +130,39 @@ const { chromium } = require('playwright')
 })()
 ```
 
+## macOS: downloads and folder access need a sandboxed launch
+
+Chrome inspects `~/Desktop`, `~/Documents` and `~/Downloads` by itself as soon as a page **downloads a file** or uses the **File System Access API** (`showDirectoryPicker`, directory handles kept in IndexedDB, the origin-private file system). It does so wherever your script saves things, and it also writes crash-reporter settings under `~/Library`. Coming from an unsigned test browser, that makes anti-ransomware / protected-folder features of security software interrupt the user with an alert such as "Google Chrome for Testing.app was blocked … to access your protected files". Screenshots, clicking, scraping and network inspection do not touch those folders.
+
+**If the script runs on macOS and the page will download a file or use the File System Access API, launch through this helper.** It starts the browser under a system sandbox profile that refuses the user's personal folders and gives it a throwaway home folder; on other systems it returns nothing and the launch is unchanged.
+
+```js
+const { mkdtemp, writeFile, chmod } = require('node:fs/promises')
+const { homedir, tmpdir } = require('node:os')
+const { join } = require('node:path')
+
+// Extra launch options that keep the browser out of the user's personal folders (macOS).
+async function personalFoldersOffLimits(browserPath) {
+  if (process.platform !== 'darwin') return {}
+  const dir = await mkdtemp(join(tmpdir(), 'browser-home-'))
+  const folders = ['Desktop', 'Documents', 'Downloads', 'Pictures', 'Movies', 'Music']
+    .map((f) => `(subpath "${join(homedir(), f)}")`).join(' ')
+  await writeFile(join(dir, 'browser.sb'), `(version 1)\n(allow default)\n(deny file-read* file-write* ${folders})\n`)
+  const wrapper = join(dir, 'browser.sh')
+  await writeFile(wrapper, `#!/bin/sh\nexec /usr/bin/sandbox-exec -f "${join(dir, 'browser.sb')}" "${browserPath}" "$@"\n`)
+  await chmod(wrapper, 0o755)
+  return { executablePath: wrapper, env: { ...process.env, HOME: dir, CFFIXED_USER_HOME: dir } }
+}
+
+const browser = await puppeteer.launch({
+  headless: 'new',
+  args: ['--no-sandbox'],            // required: without it the browser does not start inside this sandbox
+  ...(await personalFoldersOffLimits(puppeteer.executablePath())),
+})
+```
+
+The helper is exercised with Puppeteer. Playwright takes the same two options (`executablePath`, `env`) in `chromium.launch()`, with `chromium.executablePath()` as the browser path; that combination has not been run. Send downloads to a temporary folder as well (`Browser.setDownloadBehavior` with `downloadPath`, or Playwright's `downloadsPath`).
+
 ---
 
 ## Puppeteer patterns
@@ -328,7 +361,9 @@ await page.waitForResponse(res => res.url().includes('/api/data') && res.ok())
 ## Troubleshooting
 
 - `Cannot find module 'puppeteer'` / `'playwright'` → not installed for the Node you're running. Check with `npm ls puppeteer playwright` (add `-g` for a global install); reinstall on that Node if missing.
-- Puppeteer `Failed to launch the browser process` → Chrome not downloaded (some sandboxed/corporate npm setups block postinstall scripts). `npx puppeteer browsers install chrome`.
+- Puppeteer `Failed to launch the browser process` → Chrome not downloaded (some sandboxed/corporate npm setups block postinstall scripts). Ask the user, then `npx puppeteer browsers install chrome`.
+- macOS security software reports the test browser accessing protected files → the page downloads a file or uses the File System Access API; launch as in "macOS: downloads and folder access need a sandboxed launch".
+- A download starts but its file never appears while `page.setRequestInterception(true)` is on → check for the download through CDP instead: `Browser.setDownloadBehavior` with `eventsEnabled: true`, then listen for `Browser.downloadWillBegin` (`suggestedFilename`).
 - Playwright `Executable doesn't exist … ms-playwright` → browsers not installed for this Playwright version. `playwright install chromium firefox webkit`.
 - Sandbox launch error (Linux/Docker/CI/root, or a macOS sandbox prompt) → `args: ['--no-sandbox']`.
 - Chromium fails on some sites with `ERR_HTTP2_PROTOCOL_ERROR` (TLS/H2 fingerprinting) → retry with Playwright **firefox** or **webkit**.
