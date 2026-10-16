@@ -54,6 +54,8 @@ Symlinks `skills/browser-automation` into `~/.claude/skills/`, so the skill is i
 ./setup.sh --force     # replace an existing real directory at the skill path (backed up first)
 ```
 
+To update, run `git pull` in the clone: the installed skill is a symlink, so Claude Code reads the new files directly. Re-run `setup.sh` only when the link is missing or points elsewhere.
+
 ### Plugin manager — marketplace (discoverable, auto-updating)
 
 Installs the same skill, namespaced as **`/browser:browser-automation`**. Two registration paths — pick one:
@@ -84,7 +86,7 @@ In Claude Code the skill is then invoked as **`/browser-automation`**.
 | | setup.sh (symlink) | plugin manager | npx skills |
 |---|---|---|---|
 | Slash name in Claude Code | `/browser-automation` (shortest) | `/browser:browser-automation` | `/browser-automation` |
-| Install / update | clone + re-run `setup.sh` | `claude plugin install` / `update` | `npx skills add` / `update` |
+| Install / update | clone + `setup.sh`; update with `git pull` | `claude plugin install` / `update` | `npx skills add` / `update` |
 | Discoverable via marketplace | no | yes | no |
 | Other agents | no | no | yes |
 
