@@ -56,7 +56,7 @@ Symlinks `skills/browser-automation` into `~/.claude/skills/`, so the skill is i
 
 To update, run `git pull` in the clone: the installed skill is a symlink, so Claude Code reads the new files directly. Re-run `setup.sh` only when the link is missing or points elsewhere.
 
-### Plugin manager — marketplace (discoverable, auto-updating)
+### Plugin manager: marketplace (discoverable)
 
 Installs the same skill, namespaced as **`/browser:browser-automation`**. Two registration paths — pick one:
 

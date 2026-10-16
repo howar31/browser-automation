@@ -9,7 +9,7 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
   - *Standalone plugin* — `.claude-plugin/plugin.json` defines the plugin; `.claude-plugin/marketplace.json` (`source: "./"`) makes the repo its own single-plugin marketplace, directly installable.
   - *Central marketplace* — the sibling `howar31-marketplace` repo lists this repo by `source: { github, repo: howar31/browser-automation }`. Same content, zero duplication.
   - *`npx skills`* — the cross-agent skills CLI discovers `skills/browser-automation/SKILL.md` from the GitHub repo and copies or links it into each chosen agent's skills dir (for Claude Code, `.claude/skills/browser-automation/`, project or global scope). No manifest needed.
-- **Two install mechanisms, one source:** `setup.sh` (recommended) symlinks the skill directory into `~/.claude/skills/`, giving the short un-namespaced name `/browser-automation`; the Claude Code plugin manager (`claude plugin …`) installs the same skill namespaced as `/browser:browser-automation`, in exchange for marketplace discoverability and auto-update. Use one, not both (both would expose the skill under two names).
+- **Two install mechanisms, one source:** `setup.sh` (recommended) symlinks the skill directory into `~/.claude/skills/`, giving the short un-namespaced name `/browser-automation`; the Claude Code plugin manager (`claude plugin …`) installs the same skill namespaced as `/browser:browser-automation`, in exchange for marketplace discoverability and `claude plugin update` (Claude Code auto-updates only official marketplaces by default; <https://code.claude.com/docs/en/discover-plugins>). Use one, not both (both would expose the skill under two names).
 
 ## Layout
 ```
