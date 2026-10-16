@@ -8,9 +8,9 @@
 [![Stars](https://img.shields.io/github/stars/howar31/browser-automation?style=flat-square)](https://github.com/howar31/browser-automation/stargazers)
 [![Sponsor](https://img.shields.io/badge/Sponsor-donate.howar31.com-b4532c?style=flat-square&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIwLjg0IDQuNjFhNS41IDUuNSAwIDAgMC03Ljc4IDBMMTIgNS42N2wtMS4wNi0xLjA2YTUuNSA1LjUgMCAwIDAtNy43OCA3Ljc4bDEuMDYgMS4wNkwxMiAyMS4yM2w3Ljc4LTcuNzggMS4wNi0xLjA2YTUuNSA1LjUgMCAwIDAgMC03Ljc4eiIvPjwvc3ZnPg==)](https://donate.howar31.com/)
 
-A [Claude Code](https://claude.com/claude-code) skill for driving a **real headless browser** — anything `curl` or scripted HTTP can't do: click / type / scroll / upload, screenshots and PDFs, network intercept / mock / observe, raw Chrome DevTools Protocol (CDP) debugging, and cross-browser end-to-end flows.
+A [Claude Code](https://claude.com/claude-code) skill for driving a **real headless browser**: anything `curl` or scripted HTTP can't do: click / type / scroll / upload, screenshots and PDFs, network intercept / mock / observe, raw Chrome DevTools Protocol (CDP) debugging, and cross-browser end-to-end flows.
 
-The skill is **model-invoked**: Claude loads it automatically when a task needs the actual browser runtime — reproducing a UI bug, debugging client-side behavior (SPA routing, SameSite cookies, console errors), scraping JS-rendered content, or taking a screenshot of a page.
+The skill is **model-invoked**: Claude loads it automatically when a task needs the actual browser runtime, such as reproducing a UI bug, debugging client-side behavior (SPA routing, SameSite cookies, console errors), scraping JS-rendered content, or taking a screenshot of a page.
 
 ## What you get
 
@@ -40,7 +40,7 @@ The skill documents this and the cross-platform browser cache locations in full.
 
 The skill is **model-invoked**: once installed, Claude triggers it automatically from the `description`; the slash name below only matters when you invoke it by hand. Three ways to install. **Use one per agent**: installing the same skill twice exposes it under two names.
 
-### setup.sh — symlink (recommended; shortest slash name)
+### setup.sh: symlink (recommended; shortest slash name)
 
 ```bash
 git clone https://github.com/howar31/browser-automation
@@ -58,7 +58,7 @@ To update, run `git pull` in the clone: the installed skill is a symlink, so Cla
 
 ### Plugin manager: marketplace (discoverable)
 
-Installs the same skill, namespaced as **`/browser:browser-automation`**. Two registration paths — pick one:
+Installs the same skill, namespaced as **`/browser:browser-automation`**. Two registration paths; pick one:
 
 ```bash
 # Self-hosted marketplace (this repo is its own marketplace)
@@ -90,7 +90,7 @@ In Claude Code the skill is then invoked as **`/browser-automation`**.
 | Discoverable via marketplace | no | yes | no |
 | Other agents | no | no | yes |
 
-Either way, skills are picked up dynamically — run `/reload-plugins` in an active session if `browser-automation` does not appear immediately.
+Either way, skills are picked up dynamically; run `/reload-plugins` in an active session if `browser-automation` does not appear immediately.
 
 ## Uninstall
 
@@ -107,4 +107,4 @@ npx skills remove browser-automation
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
