@@ -38,7 +38,7 @@ The skill documents this and the cross-platform browser cache locations in full.
 
 ## Install
 
-The skill is **model-invoked** — once installed, Claude triggers it automatically from the `description`; the slash name below only matters when you invoke it by hand. Two ways to install. **Use one, not both** — installing via both exposes the same skill under two names.
+The skill is **model-invoked**: once installed, Claude triggers it automatically from the `description`; the slash name below only matters when you invoke it by hand. Three ways to install. **Use one per agent**: installing the same skill twice exposes it under two names.
 
 ### setup.sh — symlink (recommended; shortest slash name)
 
@@ -68,13 +68,25 @@ claude plugin marketplace add howar31/howar31-marketplace
 claude plugin install browser@howar31
 ```
 
+### npx skills: Claude Code or another agent
+
+The skill uses no Claude Code-specific paths or tools, so it also works in other coding agents. The [`npx skills`](https://github.com/vercel-labs/skills) CLI installs it for the agents you pick in its wizard:
+
+```bash
+npx skills add https://github.com/howar31/browser-automation   # then follow the wizard
+npx skills update                                              # update later
+```
+
+In Claude Code the skill is then invoked as **`/browser-automation`**.
+
 ### Which method?
 
-| | setup.sh (symlink) | plugin manager |
-|---|---|---|
-| Slash name | `/browser-automation` (shortest) | `/browser:browser-automation` |
-| Install / update | clone + re-run `setup.sh` | `claude plugin install` / `update` |
-| Discoverable via marketplace | no | yes |
+| | setup.sh (symlink) | plugin manager | npx skills |
+|---|---|---|---|
+| Slash name in Claude Code | `/browser-automation` (shortest) | `/browser:browser-automation` | `/browser-automation` |
+| Install / update | clone + re-run `setup.sh` | `claude plugin install` / `update` | `npx skills add` / `update` |
+| Discoverable via marketplace | no | yes | no |
+| Other agents | no | no | yes |
 
 Either way, skills are picked up dynamically — run `/reload-plugins` in an active session if `browser-automation` does not appear immediately.
 
@@ -86,6 +98,9 @@ rm ~/.claude/skills/browser-automation
 
 # Plugin install
 claude plugin uninstall browser@browser-automation   # or browser@howar31
+
+# npx skills install
+npx skills remove browser-automation
 ```
 
 ## License

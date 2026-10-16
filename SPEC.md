@@ -5,9 +5,10 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
 
 ## Architecture
 - **Skill, not a service.** The deliverable is `skills/browser-automation/SKILL.md` — Markdown with YAML frontmatter (`name`, `description`). Claude reads the `description` to decide when to auto-invoke; the body loads on invocation.
-- **Two distribution channels from one repo:**
+- **Three distribution channels from one repo:**
   - *Standalone plugin* — `.claude-plugin/plugin.json` defines the plugin; `.claude-plugin/marketplace.json` (`source: "./"`) makes the repo its own single-plugin marketplace, directly installable.
   - *Central marketplace* — the sibling `howar31-marketplace` repo lists this repo by `source: { github, repo: howar31/browser-automation }`. Same content, zero duplication.
+  - *`npx skills`* — the cross-agent skills CLI discovers `skills/browser-automation/SKILL.md` from the GitHub repo and copies or links it into each chosen agent's skills dir (for Claude Code, `.claude/skills/browser-automation/`, project or global scope). No manifest needed.
 - **Two install mechanisms, one source:** `setup.sh` (recommended) symlinks the skill directory into `~/.claude/skills/`, giving the short un-namespaced name `/browser-automation`; the Claude Code plugin manager (`claude plugin …`) installs the same skill namespaced as `/browser:browser-automation`, in exchange for marketplace discoverability and auto-update. Use one, not both (both would expose the skill under two names).
 
 ## Layout
@@ -41,11 +42,13 @@ A public Claude Code plugin that ships one model-invoked skill, `browser-automat
 - **Publish:** push to `github.com/howar31/browser-automation` (public). The repo is consumed live by the plugin manager — no build step.
 - **Install (recommended, symlink):** `./setup.sh` symlinks the skill into `~/.claude/skills/` → `/browser-automation`. Idempotent; `--dry-run` / `--force`.
 - **Install (plugin):** `claude plugin marketplace add howar31/browser-automation` then `claude plugin install browser@browser-automation`; or via the central marketplace, `…add howar31/howar31-marketplace` then `install browser@howar31`. → `/browser:browser-automation`.
+- **Install (any agent):** `npx skills add https://github.com/howar31/browser-automation` (wizard picks agents and scope); `npx skills update` / `npx skills remove browser-automation`. In Claude Code → `/browser-automation`.
 - Run `/reload-plugins` if the skill does not appear immediately.
 
 ## Key Decisions
 - **Genericized from a private original.** The skill began as a personal copy carrying machine-specific setup notes and locale/project-specific example strings; those were removed so the public version is portable. Reusable knowledge (e.g. nvm's per-Node-version global installs) was kept but reframed as conditional guidance.
 - **Dual-channel, single source.** Shipping `plugin.json` + a self `marketplace.json` in the same repo, and also listing the repo in the central marketplace, lets one source serve both install paths without copying skill content.
+- **`npx skills` channel added (2026-10-16).** SKILL.md references no `~/.claude` paths and no Claude Code-only tools, so the skill is useful in other agents; `npx skills` reaches them without any repo change beyond docs. Keep SKILL.md agent-neutral so this stays true. (Sibling skills that read or write Claude Code's own directories stay plugin + `setup.sh` only.)
 - **No model-invocation gating.** The skill has no side effects, so it is left fully model- and user-invocable.
 - **macOS sandboxed launch for downloads / File System Access.** On macOS, Chrome touches `~/Desktop`, `~/Documents`, `~/Downloads` and `~/Library` when a page downloads a file or uses the File System Access API, which makes anti-ransomware / protected-folder features of security software alert on the unsigned test browser. SKILL.md ships a `personalFoldersOffLimits(browserPath)` helper that wraps the browser in `/usr/bin/sandbox-exec` with a profile denying the user's personal folders and sets a throwaway `HOME` / `CFFIXED_USER_HOME`; it requires `--no-sandbox` and is a no-op off macOS. Exercised with Puppeteer only; the Playwright equivalent (`executablePath`, `env` in `chromium.launch()`) is documented as not yet run.
 - **setup.sh is the recommended install.** It is a single, model-invoked skill, so the plugin namespace (`/browser:browser-automation`) only adds length without benefit; the symlink install keeps the short `/browser-automation` for manual invocation. The plugin path stays available for users who want marketplace discoverability and auto-update.
